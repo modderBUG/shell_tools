@@ -12,7 +12,7 @@ then
 echo home content at ${path:1:1}:/${path:3:${#path}}
 home_path=${path:1:1}:/${path:3:${#path}}
 
-pip_content=$home_path/pip_test     			# Modify
+pip_content=$home_path/pip     			# Modify
 pip_path=$pip_content/pip.ini
 echo pip content at: $pip_path
 
@@ -20,12 +20,12 @@ else
 echo home content at ${HOME}
 home_path=${HOME}
 
-pip_content=$home_path/.pip_test     			# Modify
+pip_content=$home_path/.pip     			# Modify
 pip_path=$pip_content/pip.conf
 echo pip content at: $pip_path
 fi
 
-conda_path=$home_path/.condarc_test	 		# Modify
+conda_path=$home_path/.condarc	 		# Modify
 echo conda_path content at: $conda_path
 }
 
