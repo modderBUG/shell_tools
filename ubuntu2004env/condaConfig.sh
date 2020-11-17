@@ -65,4 +65,4 @@ else
 fi
 
 echo 'ok ! press any key to continue'
-read a
+#read a
