@@ -3,6 +3,16 @@
 # ENV : Cent OS 7.9
 # DESC : Modify linux source according to environment variables
 
+function rootCheck() {
+  echo "Check Permission :"
+  if [ $(whoami) != "root" ]; then
+    echo "Permission Denied! please login with 'root'"
+    exit 1
+  else
+    echo "ok!"
+  fi
+}
+
 # yum 换源
 function yumOrigen() {
   cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base-repo.bak
@@ -35,13 +45,13 @@ function dockerConfig() {
   # json无法启动docker，ubuntu环境。
   tee /etc/docker/daemon.conf <<-'EOF'
 {
-“registry-mirrors”: [
-“https://docker.mirrors.ustc.edu.cn”,
-“https://kfwkfulq.mirror.aliyuncs.com”,
-“https://2lqq34jg.mirror.aliyuncs.com”,
-“https://pee6w651.mirror.aliyuncs.com”,
-“https://registry.docker-cn.com”,
-“http://hub-mirror.c.163.com”
+"registry-mirrors": [
+"https://docker.mirrors.ustc.edu.cn",
+"https://kfwkfulq.mirror.aliyuncs.com",
+"https://2lqq34jg.mirror.aliyuncs.com",
+"https://pee6w651.mirror.aliyuncs.com",
+"https://registry.docker-cn.com",
+"http://hub-mirror.c.163.com"
 ]
 }
 EOF
@@ -99,9 +109,10 @@ function condaInstaller() {
   source ~/.bashrc
   echo "Miniconda3 installed succeed !"
 }
-#yumOrigen  #yum 换源
-gitInstaller
+rootCheck
+yumOrigen  #yum 换源
 dockerInstaller
+gitInstaller
 redisInstaller
 mysqlInstaller
 mariaDBInstaller

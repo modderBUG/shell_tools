@@ -52,8 +52,9 @@ linuxDoWork() {
 
 getSysEnv() {
   echo "what is your system platform?:linux|win "
-  read sys
-  sys=$sys
+  #  read sys
+  sys='linux'
+  #  sys=$sys
 }
 getSysEnv
 getPath $sys
