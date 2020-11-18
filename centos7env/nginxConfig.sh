@@ -54,4 +54,7 @@ EOF
   sleep 2s
 }
 
-nginxConfig.sh $1 $2
+
+port=$1
+name=$2
+nginxConfig "${port:-8013}" "${name:-nginx_master}"

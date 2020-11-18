@@ -16,12 +16,14 @@ function rootCheck() {
 
 # yum 换源
 function yumOrigen() {
-  cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base-repo.bak
+  cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base-repo.bak #cp /etc/yum.repos.d/CentOS-Base-repo.bak /etc/yum.repos.d/CentOS-Base.repo
   wget http://mirrors.aliyun.com/repo/Centos-7.repo
   yum clean all
   mv Centos-7.repo /etc/yum.repos.d/CentOS-Base.repo
   yum makecache
-  yum update
+  yum update <<EOF
+y
+EOF
   echo "................................yum change origen succeed !"
   sleep 1s
 }
@@ -29,13 +31,17 @@ function yumOrigen() {
 # 安装git
 function gitInstaller() {
   yum info git
-  yum install git
+  yum install git <<EOF
+y
+EOF
   echo "................................git installed succeed !"
   sleep 1s
 }
 # 安装docker 换源
 function dockerInstaller() {
-  yum -y install docker
+  yum -y install docker <<EOF
+y
+EOF
   systemctl start docker
   systemctl status docker
   dockerConfig
@@ -96,13 +102,15 @@ function mariaDBInstaller() {
 
 # 运行nginx安装脚本
 function nginxInstaller() {
-  bash nginxConfig.sh $1 $2
+  bash nginxConfig.sh
 }
 
 # 安装java
 function javaInstaller() {
   # yum search java | grep -i --color jdk
-  yum -y install java-1.8.0-openjdk*
+  yum -y install java-1.8.0-openjdk* <<EOF
+y
+EOF
   #  yum -y install java-11-openjdk*
   # yum -y remove java-1.7.0-openjdk*
   echo "................................java installed succeed !"
@@ -111,20 +119,24 @@ function javaInstaller() {
 
 # 安装conda
 function condaInstaller() {
-  sh condaConfig.sh
-  wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  bash condaConfig.sh
+  if [ -e Miniconda3-latest-Linux-x86_64.sh ]; then
+    echo "Miniconda3-latest-Linux-x86_64.sh"
+  else
+    wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  fi
   bash Miniconda3-latest-Linux-x86_64.sh
-  echo -e "* you can run : \n\n   *  source ~/.bashrc "
   echo "................................Miniconda3 installed succeed !"
+  echo -e "* you can run : \n\n   *  source ~/.bashrc "
   sleep 1s
 }
 rootCheck
-yumOrigen  #yum 换源
+yumOrigen #yum 换源
 javaInstaller
 dockerInstaller
 gitInstaller
 redisInstaller 6379 redis_master
 mysqlInstaller 3366 mysql_master
 mariaDBInstaller 3306 maria_master
-nginxInstaller 8013 nginx_master
+nginxInstaller
 condaInstaller

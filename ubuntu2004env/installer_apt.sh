@@ -114,7 +114,7 @@ function mariaDBInstaller() {
 
 # 运行nginx安装脚本
 function nginxInstaller() {
-  bash nginxConfig.sh $1 $2
+  bash nginxConfig.sh
 }
 
 # 安装java
@@ -131,13 +131,13 @@ EOF
 # 安装conda
 function condaInstaller() {
   bash condaConfig.sh
-  wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  if [ -e Miniconda3-latest-Linux-x86_64.sh ]; then
+    echo "Miniconda3-latest-Linux-x86_64.sh"
+  else
+    wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  fi
   # 有交互，确认！
-  bash Miniconda3-latest-Linux-x86_64.sh <<EOF
-y
-/home/miniconda3
-y
-EOF
+  bash Miniconda3-latest-Linux-x86_64.sh
   echo ".................................Miniconda3 installed succeed !"
   echo -e "* you can run : \n\n   *  source ~/.bashrc "
   sleep 1s
@@ -150,5 +150,5 @@ dockerInstaller
 redisInstaller 6379 redis_master
 mysqlInstaller 3366 mysql_master
 mariaDBInstaller 3306 maria_master
-nginxInstaller 8013 nginx_master
+nginxInstaller
 condaInstaller
