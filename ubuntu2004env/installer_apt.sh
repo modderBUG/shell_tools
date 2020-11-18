@@ -10,6 +10,7 @@ function rootCheck() {
     exit 1
   else
     echo ".................................OK! Now,start run bash!"
+    sleep 1s
   fi
 }
 
@@ -39,12 +40,14 @@ EOF
 y
 EOF
   echo ".................................apt change origen succeed !"
+  sleep 1s
 }
 
 # 安装git
 function gitInstaller() {
   sudo apt install git
   echo ".................................git installed succeed !"
+  sleep 1s
 }
 # 安装docker 换源
 function dockerInstaller() {
@@ -58,6 +61,7 @@ EOF
   dockerConfig
   sudo systemctl restart docker
   echo ".................................docker installed succeed !"
+  sleep 1s
 }
 # 配置docker
 function dockerConfig() {
@@ -79,8 +83,9 @@ EOF
 function redisInstaller() {
   sudo docker pull redis:latest
   sudo docker images
-  sudo docker run -itd --name redis_master -p 6379:6379 redis
+  sudo docker run -itd --name $2 -p $1:6379 redis
   echo ".................................redis installed succeed !"
+  sleep 1s
 }
 
 安装mysql
@@ -89,9 +94,10 @@ function mysqlInstaller() {
   mkdir -p "/home/mysql/log"
   mkdir -p "/home/mysql/data"
   mkdir -p "/home/mysql/conf"
-  docker run -p 3366:3306 --name mysql_master -v /home/mysql/log:/var/log/mysql -v /home/mysql/data:/var/lib/mysql -v /home/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mysql:5.7
+  docker run -p $1:3306 --name $2 -v /home/mysql/log:/var/log/mysql -v /home/mysql/data:/var/lib/mysql -v /home/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mysql:5.7
   docker ps
   echo ".................................mysql57 installed succeed !"
+  sleep 1s
 }
 
 # 安装maria
@@ -100,14 +106,15 @@ function mariaDBInstaller() {
   mkdir -p "/home/mariadb/log"
   mkdir -p "/home/mariadb/data"
   mkdir -p "/home/mariadb/conf"
-  docker run -p 3306:3306 --name mariadb_master -v /home/mariadb/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mariadb:10.3.9
+  docker run -p $1:3306 --name $2 -v /home/mariadb/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mariadb:10.3.9
   docker ps
   echo ".................................mariadb installed succeed !"
+  sleep 1s
 }
 
 # 运行nginx安装脚本
 function nginxInstaller() {
-  bash nginxConfig.sh
+  bash nginxConfig.sh $1 $2
 }
 
 # 安装java
@@ -118,6 +125,7 @@ y
 EOF
   java -version
   echo ".................................Java installed succeed !"
+  sleep 1s
 }
 
 # 安装conda
@@ -126,21 +134,21 @@ function condaInstaller() {
   wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
   # 有交互，确认！
   bash Miniconda3-latest-Linux-x86_64.sh <<EOF
-yes
+y
 /home/miniconda3
-yes
+y
 EOF
-  source ~/.bashrc
   echo ".................................Miniconda3 installed succeed !"
-  echo "you can run : source ~/.bashrc"
+  echo -e "* you can run : \n\n   *  source ~/.bashrc "
+  sleep 1s
 }
 rootCheck
 aptOrigen
 javaInstaller
 dockerInstaller
 #gitInstaller    #默认有git
-redisInstaller
-mysqlInstaller
-mariaDBInstaller
-nginxInstaller
+redisInstaller 6379 redis_master
+mysqlInstaller 3366 mysql_master
+mariaDBInstaller 3306 maria_master
+nginxInstaller 8013 nginx_master
 condaInstaller

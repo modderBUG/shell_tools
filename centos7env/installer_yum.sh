@@ -10,6 +10,7 @@ function rootCheck() {
     exit 1
   else
     echo "ok!"
+    sleep 1s
   fi
 }
 
@@ -21,14 +22,16 @@ function yumOrigen() {
   mv Centos-7.repo /etc/yum.repos.d/CentOS-Base.repo
   yum makecache
   yum update
-  echo "yum change origen succeed !"
+  echo "................................yum change origen succeed !"
+  sleep 1s
 }
 
 # 安装git
 function gitInstaller() {
   yum info git
   yum install git
-  echo "git installed succeed !"
+  echo "................................git installed succeed !"
+  sleep 1s
 }
 # 安装docker 换源
 function dockerInstaller() {
@@ -38,7 +41,8 @@ function dockerInstaller() {
   dockerConfig
   systemctl daemon-reload
   systemctl restart docker
-  echo "docker installed succeed !"
+  echo "................................docker installed succeed !"
+  sleep 1s
 }
 # 配置docker
 function dockerConfig() {
@@ -61,8 +65,9 @@ EOF
 function redisInstaller() {
   docker pull redis:latest
   docker images
-  docker run -itd --name redis_master -p 6379:6379 redis
-  echo "redis installed succeed !"
+  docker run -itd --name $2 -p $1:6379 redis
+  echo "................................redis installed succeed !"
+  sleep 1s
 }
 
 # 安装mysql
@@ -71,9 +76,10 @@ function mysqlInstaller() {
   mkdir -p "/home/mysql/log"
   mkdir -p "/home/mysql/data"
   mkdir -p "/home/mysql/conf"
-  docker run -p 3306:3306 --name mysql_master -v /home/mysql/log:/var/log/mysql -v /home/mysql/data:/var/lib/mysql -v /home/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mysql:5.7
+  docker run -p $1:3306 --name $2 -v /home/mysql/log:/var/log/mysql -v /home/mysql/data:/var/lib/mysql -v /home/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mysql:5.7
   docker ps
-  echo "mysql57 installed succeed !"
+  echo "................................mysql57 installed succeed !"
+  sleep 1s
 }
 
 # 安装maria
@@ -82,14 +88,15 @@ function mariaDBInstaller() {
   mkdir -p "/home/mariadb/log"
   mkdir -p "/home/mariadb/data"
   mkdir -p "/home/mariadb/conf"
-  docker run -p 3366:3306 --name mariadb_master -v /home/mariadb/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mariadb:10.3.9
+  docker run -p $1:3306 --name $2 -v /home/mariadb/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=initpasswd -d mariadb:10.3.9
   docker ps
-  echo "mariadb installed succeed !"
+  echo "................................mariadb installed succeed !"
+  sleep 1s
 }
 
 # 运行nginx安装脚本
 function nginxInstaller() {
-  sh nginxConfig.sh
+  bash nginxConfig.sh $1 $2
 }
 
 # 安装java
@@ -98,7 +105,8 @@ function javaInstaller() {
   yum -y install java-1.8.0-openjdk*
   #  yum -y install java-11-openjdk*
   # yum -y remove java-1.7.0-openjdk*
-  echo "java installed succeed !"
+  echo "................................java installed succeed !"
+  sleep 1s
 }
 
 # 安装conda
@@ -106,16 +114,17 @@ function condaInstaller() {
   sh condaConfig.sh
   wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
   bash Miniconda3-latest-Linux-x86_64.sh
-  source ~/.bashrc
-  echo "Miniconda3 installed succeed !"
+  echo -e "* you can run : \n\n   *  source ~/.bashrc "
+  echo "................................Miniconda3 installed succeed !"
+  sleep 1s
 }
 rootCheck
 yumOrigen  #yum 换源
+javaInstaller
 dockerInstaller
 gitInstaller
-redisInstaller
-mysqlInstaller
-mariaDBInstaller
-nginxInstaller
-javaInstaller
+redisInstaller 6379 redis_master
+mysqlInstaller 3366 mysql_master
+mariaDBInstaller 3306 maria_master
+nginxInstaller 8013 nginx_master
 condaInstaller

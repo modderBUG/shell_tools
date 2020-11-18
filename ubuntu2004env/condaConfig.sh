@@ -65,4 +65,5 @@ else
 fi
 
 echo 'ok ! press any key to continue'
+sleep 2s
 #read a
