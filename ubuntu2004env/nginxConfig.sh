@@ -6,10 +6,10 @@ function nginxConfig() {
   docker pull nginx:latest
   mkdir -p "/home/$2/dist"
   docker run -di -v /home/$2:/home/$2 --name=$2 -p $1:80 nginx
-#  docker cp $2:/etc/nginx/nginx.conf nginx.conf
-#  echo "注意：需要编写nginx配置文件(warn: Need to write nginx configuration file):"
-#  read xxx
-#  vi nginx.conf
+  #  docker cp $2:/etc/nginx/nginx.conf nginx.conf
+  #  echo "注意：需要编写nginx配置文件(warn: Need to write nginx configuration file):"
+  #  read xxx
+  #  vi nginx.conf
   tee nginx.conf <<-'EOF'
 user  nginx;
 worker_processes  1;
@@ -34,7 +34,7 @@ server
         listen 0.0.0.0:80;
         #server_name 123.57.147.211;
         index index.html;
-        root  /home/$2/dist;  #dist上传的路径
+        root  /home/nginx_master/dist;  #dist上传的路径
         # 避免访问出现 404 错误
         location / {
           try_files $uri $uri/ @router;
@@ -47,6 +47,7 @@ server
     #include /etc/nginx/conf.d/*.conf;
 }
 EOF
+  sed -i "s#home/nginx_master/dist#home/${2}/dist#"
   docker cp nginx.conf $2:/etc/nginx/nginx.conf
   docker restart $2
   docker ps

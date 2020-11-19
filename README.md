@@ -17,7 +17,9 @@
 3. `sudo su root` 必须以root运行。
 4. `bash installer_apt.sh` 等待完成！
 ### 说明
-+ installer_apt.sh 为
++ installer_apt.sh 为总安装程序
++ condaConfig.sh 为conda和python配置环境变量的程序，进配置环境。不下载conda，下载逻辑在installer里
++ nginxConfig.sh 为配置nginx程序，可单独调用
 
 ## Linux cent os 7.9 
 + condaConfig.sh
