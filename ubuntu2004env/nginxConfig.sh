@@ -47,7 +47,7 @@ server
     #include /etc/nginx/conf.d/*.conf;
 }
 EOF
-  sed -i "s#home/nginx_master/dist#home/${2}/dist#"
+  sed -i "s#home/nginx_master/dist#home/${2}/dist#" nginx.conf
   docker cp nginx.conf $2:/etc/nginx/nginx.conf
   docker restart $2
   docker ps
