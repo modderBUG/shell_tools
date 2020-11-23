@@ -44,7 +44,7 @@ winDoWork() {
 }
 
 linuxDoWork() {
-  echo now , we start run the windows command ...
+  echo now , we start run the linux command ...
   mkdir $pip_content
   writePip $pip_path
   writeConda $conda_path
