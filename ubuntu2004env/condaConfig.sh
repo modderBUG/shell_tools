@@ -27,12 +27,31 @@ getPath() {
 }
 
 writePip() {
-  echo -e "[global]\nindex-url = https://mirrors.aliyun.com/pypi/simple\n[install]\nuse-mirrors =truenmirrors =https://mirrors.aliyun.com/pypi/simple\ntrusted-host =https://mirrors.aliyun.com/pypi/simple" >>$1
+  pip install pip -U
+  pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
   echo write file to $1
 }
 
 writeConda() {
-  echo -e "channels:\n  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main\n  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free\nssl_verify: false\nshow_channel_urls: true" >>$1
+  tee $1 <<-EOF
+channels:
+  - defaults
+show_channel_urls: true
+channel_alias: https://mirrors.tuna.tsinghua.edu.cn/anaconda
+default_channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/pro
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+EOF
   echo write file to $1
 }
 
